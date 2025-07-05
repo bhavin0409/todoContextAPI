@@ -3,39 +3,53 @@ import { useTodo } from '../context/todoContext'
 
 const TodoFrom = () => {
     const [todo, setTodo] = useState("")
+    const [reminderDateTime, setReminderDateTime] = useState("")
 
     console.log(todo);
-    
-
+    console.log(reminderDateTime);
+        
     const {addTodo} = useTodo()
 
     const add = (e) => {
         e.preventDefault();
         
-        if (!todo) {
+        if (!todo && !reminderDateTime) {
             return;
         }
 
-        addTodo({ todo : todo, completed : false });
+        addTodo({ todo : todo, reminderDateTime: reminderDateTime, completed : false });
 
         console.log(todo);
+        console.log(reminderDateTime);
         
-
+        setReminderDateTime("")
         setTodo("");
         
     }
     
 
     return (
-        <form className="flex" onSubmit={add}>
+        <form
+            className="flex flex-col gap-3 sm:flex-row sm:gap-0"
+            onSubmit={add}
+        >
             <input
                 type="text"
                 placeholder="Write Todo..."
                 value={todo}
                 onChange={(e) => setTodo(e.target.value)}
-                className="w-full border border-black/10 rounded-l-lg px-3 outline-none duration-150 bg-white/20 py-1.5"
+                className="w-full border border-black/10 rounded-lg px-3 outline-none duration-150 bg-white/20 py-1.5"
             />
-            <button type="submit" className="rounded-r-lg px-3 py-1 bg-green-600 text-white shrink-0">
+            <input
+                type="datetime-local"
+                value={reminderDateTime}
+                onChange={(e) => setReminderDateTime(e.target.value)}
+                className="border border-black/10 rounded-lg px-3 py-1.5 outline-none duration-150 bg-white/20 sm:ml-3"
+            />
+            <button
+                type="submit"
+                className="rounded-lg px-6 py-1 bg-green-600 text-white shrink-0 mt-2 sm:mt-0 sm:ml-3"
+            >
                 Add
             </button>
         </form>

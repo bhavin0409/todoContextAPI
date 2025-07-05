@@ -6,10 +6,36 @@ import TodoItem from './Components/TodoItem'
 const App = () => {
   const [todos, setTodos] = useState([])
 
+  useEffect(() => {
+    if (Notification.permission !== 'granted') {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  const scheduleReminder = (todoText, reminderDateTime) => {
+    const reminderDate = new Date(reminderDateTime)
+    const delay = reminderDate.getTime() - Date.now()
+
+    console.log(`Reminder ${todos.find(todo => todo.id === id)?.todo} set for ${delay} milliseconds from now.`);
+
+    if (delay > 0) {
+      setTimeout(() => {
+        if (Notification.permission !== 'granted') {
+          Notification.requestPermission();
+        }
+        
+        if (Notification.permission === "granted") {
+          new Notification("⏰ Reminder", {
+            body: `Reminder for todo: ${todoText || "No todo found"}`
+          })
+        }
+      }, delay)
+    }
+  }
   const addTodo = (todo) => {
-
-    setTodos((prev) => [{ id: Date.now(), ...todo }, ...prev])
-
+    const id = Date.now();
+    setTodos((prev) => [{ id, ...todo }, ...prev])  
+    scheduleReminder(todo.todo, todo.reminderDateTime)
   }
 
   const updateTodo = (id, todo) => {
@@ -46,14 +72,14 @@ const App = () => {
 
 
   return (
-    <TodoProvider value={{ todos, addTodo, updateTodo, deleteTodo, toggleTodo }}>
-      <div className="bg-[#172842] min-h-screen py-8">
-        <div className="w-full max-w-2xl mx-auto shadow-md rounded-lg px-4 py-3 text-white">
-          <h1 className="text-2xl font-bold text-center mb-8 mt-2">Manage Your Todos</h1>
+    <TodoProvider value={{ todos, addTodo, scheduleReminder, updateTodo, deleteTodo, toggleTodo }}>
+      <div className="bg-[#172842] min-h-screen py-8 px-2">
+        <div className="w-full max-w-2xl mx-auto shadow-md rounded-lg px-2 sm:px-4 py-3 text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-8 mt-2">Manage Your Todos</h1>
           <div className="mb-4">
             <TodoFrom />
           </div>
-          <div className="flex flex-wrap gap-y-3">
+          <div className="flex flex-col gap-y-3">
             {/*Loop and Add TodoItem here */}
             {todos.map((todo) => (
               <div className="w-full" key={todo.id}>
