@@ -15,19 +15,14 @@ const App = () => {
   const scheduleReminder = (todoText, reminderDateTime) => {
     const reminderDate = new Date(reminderDateTime)
     const delay = reminderDate.getTime() - Date.now()
-
-    console.log(`Reminder ${todos.find(todo => todo.id === id)?.todo} set for ${delay} milliseconds from now.`);
-
     if (delay > 0) {
       setTimeout(() => {
-        if (Notification.permission !== 'granted') {
-          Notification.requestPermission();
-        }
-        
         if (Notification.permission === "granted") {
           new Notification("⏰ Reminder", {
             body: `Reminder for todo: ${todoText || "No todo found"}`
           })
+        }else{
+          Notification.requestPermission();
         }
       }, delay)
     }
@@ -47,8 +42,6 @@ const App = () => {
   }
 
   const toggleTodo = (id) => {
-    console.log(id);
-
     setTodos((prev) => prev.map((prevTodo) => prevTodo.id === id ? {
       id: prevTodo.id,
       todo: prevTodo.todo,
@@ -79,10 +72,9 @@ const App = () => {
           <div className="mb-4">
             <TodoFrom />
           </div>
-          <div className="flex flex-col gap-y-3">
-            {/*Loop and Add TodoItem here */}
+          <div className="flex flex-col gap-y-3 max-h-80 overflow-y-auto">
             {todos.map((todo) => (
-              <div className="w-full" key={todo.id}>
+              <div className="w-full py-1" key={todo.id}>
                 <TodoItem todo={todo} />
               </div>
             ))}

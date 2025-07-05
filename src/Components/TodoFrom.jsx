@@ -4,10 +4,7 @@ import { useTodo } from '../context/todoContext'
 const TodoFrom = () => {
     const [todo, setTodo] = useState("")
     const [reminderDateTime, setReminderDateTime] = useState("")
-
-    console.log(todo);
-    console.log(reminderDateTime);
-        
+    
     const {addTodo} = useTodo()
 
     const add = (e) => {
@@ -18,10 +15,6 @@ const TodoFrom = () => {
         }
 
         addTodo({ todo : todo, reminderDateTime: reminderDateTime, completed : false });
-
-        console.log(todo);
-        console.log(reminderDateTime);
-        
         setReminderDateTime("")
         setTodo("");
         
